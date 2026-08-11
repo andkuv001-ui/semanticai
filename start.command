@@ -24,8 +24,11 @@ if ! docker info >/dev/null 2>&1; then
   exit 1
 fi
 
-echo "Сборка и запуск контейнеров..."
-docker compose up -d --build
+echo "Запуск контейнеров..."
+docker compose up -d || {
+  echo "Образ не найден. Сборка..."
+  docker compose up -d --build
+}
 
 echo ""
 echo "Ожидание запуска приложения..."
