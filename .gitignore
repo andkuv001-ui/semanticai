@@ -37,3 +37,8 @@ next-env.d.ts
 # playwright cli
 .playwright-cli
 .playwright-mcp
+
+# temp / logs
+*.log
+screenshot*.png
+smoke-test*

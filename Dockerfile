@@ -1,5 +1,4 @@
-# Production Dockerfile for Yandex Cloud Serverless Container
-# This Dockerfile is optimized for production deployment
+# Production Dockerfile for Coolify / self-hosted deployment
 
 FROM node:24-alpine AS builder
 
@@ -38,7 +37,7 @@ USER nextjs
 
 EXPOSE 8080
 
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:8080/api/health', (r) => r.statusCode === 200 ? process.exit(0) : process.exit(1))"
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:8080/api/health', (r) => { let d=''; r.on('data',c=>d+=c); r.on('end',()=>{ try { const j=JSON.parse(d); r.statusCode===200 && j.status==='ok' ? process.exit(0) : process.exit(1) } catch { process.exit(1) } }) })"
 
 CMD ["npx", "next", "start", "-p", "8080"]

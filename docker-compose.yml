@@ -1,34 +1,58 @@
 services:
   dynamodb-local:
     image: amazon/dynamodb-local:latest
-    container_name: dynamodb-local
-    ports:
-      - "8000:8000"
-    command: "-jar DynamoDBLocal.jar -sharedDb"
+    container_name: semanticai-dynamodb
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /data"
+    volumes:
+      - dynamodb-data:/data
     healthcheck:
-      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost:8000/ || exit 1"]
-      interval: 2s
-      timeout: 5s
+      test: ["CMD-SHELL", "curl -sf http://localhost:8000/shell/ || exit 1"]
+      interval: 5s
+      timeout: 3s
       retries: 10
+      start_period: 5s
+    restart: unless-stopped
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    environment:
+      - NODE_ENV=production
+      - DOCUMENT_API_ENDPOINT=http://dynamodb-local:8000
+      - DOCUMENT_API_REGION=ru-central1
+      - AWS_ACCESS_KEY_ID=local
+      - AWS_SECRET_ACCESS_KEY=local
+    command: ["npx", "tsx", "scripts/migrate.ts"]
+    depends_on:
+      dynamodb-local:
+        condition: service_healthy
+    restart: "no"
 
   app:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     working_dir: /app
-    command: sh -c "npm install && node node_modules/esbuild/install.js && npm run db:migrate && npm run dev:docker"
-    env_file:
-      - .env.docker
     environment:
-      - NODE_ENV=development
-    volumes:
-      - .:/app
-      - /app/.next
-      - /app/node_modules
+      - NODE_ENV=production
+      - PORT=8080
+      - DOCUMENT_API_ENDPOINT=http://dynamodb-local:8000
+      - DOCUMENT_API_REGION=ru-central1
+      - AWS_ACCESS_KEY_ID=local
+      - AWS_SECRET_ACCESS_KEY=local
+      - YANDEXGPT_API_KEY=${YANDEXGPT_API_KEY:-}
+      - YANDEXGPT_FOLDER_ID=${YANDEXGPT_FOLDER_ID:-}
+      - YANDEXGPT_MODEL_URI=${YANDEXGPT_MODEL_URI:-}
     ports:
       - "8080:8080"
     depends_on:
       dynamodb-local:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
 
-
+volumes:
+  dynamodb-data:

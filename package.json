@@ -13,8 +13,8 @@
     "check:backlog": "tsx scripts/check-backlog.ts",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "db:migrate": "tsx scripts/migrate.ts",
-    "docker:dev": "docker-compose up --build",
-    "docker:dev:down": "docker-compose down",
+    "docker:dev": "docker compose up --build",
+    "docker:dev:down": "docker compose down",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
