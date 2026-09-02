@@ -368,12 +368,12 @@ export function SemanticCoreGenerator({
         {yandexGptConfigured ? (
           <Badge variant="secondary" className="h-6 gap-1.5 text-xs">
             <Bot className="h-3.5 w-3.5 text-primary" />
-            YandexGPT подключён — реальная генерация
+            RouterAI подключён — реальная генерация
           </Badge>
         ) : (
           <Badge variant="outline" className="h-6 gap-1.5 text-xs">
             <Wrench className="h-3.5 w-3.5 text-muted-foreground" />
-            Приблизительная генерация (ключ YandexGPT не задан)
+            Приблизительная генерация (ключ RouterAI не задан)
           </Badge>
         )}
       </div>
@@ -424,7 +424,7 @@ export function SemanticCoreGenerator({
                   {usedModel ? (
                     <Badge variant="secondary" className="gap-1">
                       <Bot className="h-3 w-3" />
-                      YandexGPT
+                      RouterAI
                     </Badge>
                   ) : (
                     <Badge variant="outline" className="gap-1">

@@ -7,12 +7,12 @@ import {
   type CoreItem,
   type GeneratedCore,
 } from "@/lib/semantic-core";
-import { callYandexGpt, isYandexGptConfigured } from "@/lib/yandexgpt";
+import { callRouterAi, isRouterAiConfigured } from "@/lib/routerai";
 
 /**
  * Генерация семантического ядра и оценка частотности.
  *
- * Когда на сервере задан API-ключ YandexGPT (см. lib/yandexgpt.ts), ядро и
+ * Когда на сервере задан API-ключ RouterAI (см. lib/routerai.ts), ядро и
  * частотность формируются моделью. Если ключ не задан, модель недоступна или
  * ответ не удалось разобрать — используется прежняя приблизительная логика из
  * lib/semantic-core.ts, чтобы приложение продолжало работать без ошибок.
@@ -101,8 +101,8 @@ export async function generateCore(rawTopic: string): Promise<GeneratedCore> {
   const topic = rawTopic.trim().replace(/\s+/g, " ");
   if (!topic) return generateApproximate(topic);
 
-  if (isYandexGptConfigured()) {
-    const result = await callYandexGpt(`Тема продажи: ${topic}`, {
+  if (isRouterAiConfigured()) {
+    const result = await callRouterAi(`Тема продажи: ${topic}`, {
       systemPrompt: SYSTEM_PROMPT,
       temperature: 0.4,
       maxTokens: 3000,

@@ -3,7 +3,7 @@ import { SemanticCoreGenerator } from "@/components/semantic-core-generator";
 import { UsageCounter } from "@/components/usage-counter";
 import { UsageProvider } from "@/components/usage-provider";
 import { isDatabaseAvailable } from "@/lib/db";
-import { isYandexGptConfigured } from "@/lib/yandexgpt";
+import { isRouterAiConfigured } from "@/lib/routerai";
 import { getAllGenerations, getAllFavorites, getUsage } from "@/lib/models";
 import {
   emptyUsage,
@@ -60,7 +60,7 @@ export default async function HomePage() {
             initialGenerations={initialGenerations}
             initialFavorites={initialFavorites}
             dbAvailable={dbAvailable}
-            yandexGptConfigured={isYandexGptConfigured()}
+            yandexGptConfigured={isRouterAiConfigured()}
           />
         </UsageProvider>
       </div>

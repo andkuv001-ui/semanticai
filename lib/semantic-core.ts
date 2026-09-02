@@ -15,7 +15,7 @@ export interface GeneratedCore {
   topic: string;
   keywords: CoreItem[];
   queries: CoreItem[];
-  /** true, если ядро и частотность сгенерированы моделью YandexGPT. */
+  /** true, если ядро и частотность сгенерированы моделью RouterAI. */
   usedModel: boolean;
 }
 
